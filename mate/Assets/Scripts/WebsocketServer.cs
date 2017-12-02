@@ -31,6 +31,7 @@ public class WebsocketServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        computeWeigthAccordingKeyboard();
         grow();
     }
 
@@ -41,13 +42,6 @@ public class WebsocketServer : MonoBehaviour
 
     void grow()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
-            weight = (float)(weight * 1.4);
-        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-            weight = Mathf.Max((float)(weight / 1.4), 0.1f);
-        }
-
-        Debug.Log("W: " + weight);
 
         var width = pingu.GetComponent<Renderer>().bounds.size.x;
         if (weight > 10)
@@ -77,16 +71,56 @@ public class WebsocketServer : MonoBehaviour
             pingu.GetComponent<Renderer>().material.color = Color.green;
         }
     }
+
+    void computeWeigthAccordingKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            weight = (float)(weight * 1.4);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            weight = Mathf.Max((float)(weight / 1.4), 0.1f);
+        }
+    }
 }
 
 public class WSWorker : WebSocketBehavior
 {
     protected override void OnMessage(MessageEventArgs e)
     {
-        Debug.Log("Got message");
-        Debug.Log(e.Data);
-        var weight = Mathf.Abs(float.Parse(e.Data, CultureInfo.InvariantCulture.NumberFormat));
-        WebsocketServer.weight = Mathf.Max(weight, 0.1f);
+        var msg = e.Data;
+
+        string[] splitted = msg.Split(':');
+        string header = splitted[0];
+        float value = Mathf.Abs(float.Parse(splitted[1], CultureInfo.InvariantCulture.NumberFormat));
+        if (header == "S")
+        { // SCALE
+            WebsocketServer.weight = Mathf.Max(value, 0.1f);
+        }
+        else if (header.StartsWith("GY"))
+        { // GYRO
+            if (header == "GY-X")
+            {
+                Debug.Log("Got X axis (" + value + ")");
+            }
+            else if (header == "GY-Y")
+            {
+                Debug.Log("Got Y axis (" + value + ")");
+
+            }
+            else if (header == "GY-H")
+            {
+                Debug.Log("Got H axis (" + value + ")");
+
+            }
+        }
+        else if (header.StartsWith(""))
+        { // GYRO
+
+        }
+
+
         Debug.Log("WW: " + WebsocketServer.weight);
     }
 
