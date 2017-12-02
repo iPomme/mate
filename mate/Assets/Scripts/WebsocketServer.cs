@@ -15,7 +15,7 @@ public class WebsocketServer : MonoBehaviour
 
     private WebSocketServer wssv;
 
-    public static float weight = 0;
+    public static float weight = 0.1f;
 
 
     // Use this for initialization
@@ -41,9 +41,18 @@ public class WebsocketServer : MonoBehaviour
 
     void grow()
     {
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            weight = (float)(weight * 1.4);
+        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            weight = Mathf.Max((float)(weight / 1.4), 0.1f);
+        }
+
+        Debug.Log("W: " + weight);
+
         var width = pingu.GetComponent<Renderer>().bounds.size.x;
         if (weight > 10)
         {
+            weight = 0.1f;
             pingu.transform.localScale = new Vector3(weight, weight, weight);
         }
         else if (width > lowerbound && width < upperbound)
@@ -54,11 +63,13 @@ public class WebsocketServer : MonoBehaviour
         {
             pingu.transform.localScale = new Vector3(weight, weight, weight);
             pingu.GetComponent<Renderer>().material.color = Color.yellow;
+            weight = Mathf.Max((float)(weight / 1.003), 0.1f);
         }
         else if (weight > upperbound)
         {
             pingu.transform.localScale = new Vector3(weight, weight, weight);
             pingu.GetComponent<Renderer>().material.color = Color.red;
+            weight = Mathf.Max((float)(weight / 1.003), 0.1f);
         }
         else
         {
@@ -75,8 +86,8 @@ public class WSWorker : WebSocketBehavior
         Debug.Log("Got message");
         Debug.Log(e.Data);
         var weight = Mathf.Abs(float.Parse(e.Data, CultureInfo.InvariantCulture.NumberFormat));
-        var factor = weight / 200;
-        WebsocketServer.weight = weight;
+        WebsocketServer.weight = Mathf.Max(weight, 0.1f);
+        Debug.Log("WW: " + WebsocketServer.weight);
     }
 
 
