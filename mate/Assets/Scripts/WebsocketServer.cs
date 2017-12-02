@@ -17,6 +17,10 @@ public class WebsocketServer : MonoBehaviour
 
     public static float weight = 0.1f;
 
+    public static Vector4 position = new Vector4(0, 0, 0, 0);
+
+    private float moveCoeff = 5;
+
 
     // Use this for initialization
     void Start()
@@ -31,6 +35,9 @@ public class WebsocketServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        computePositionAccordingKeyboard();
+        move();
+
         computeWeigthAccordingKeyboard();
         grow();
     }
@@ -40,9 +47,25 @@ public class WebsocketServer : MonoBehaviour
         wssv.Stop();
     }
 
+    bool has(float v) {
+        return v <= -1 || v >= 1;
+    }
+
+    void move()
+    {
+        if (has(position.x))
+        {
+            var sens = position.x > 0 ? Vector3.forward : Vector3.back;
+            pingu.transform.Translate(sens * Time.deltaTime * 10);
+        }
+        if (has(position.y))
+        {
+            pingu.transform.Rotate(0, Time.deltaTime * 40 * position.y, 0);
+        }
+    }
+
     void grow()
     {
-
         var width = pingu.GetComponent<Renderer>().bounds.size.x;
         if (weight > 10)
         {
@@ -74,19 +97,48 @@ public class WebsocketServer : MonoBehaviour
 
     void computeWeigthAccordingKeyboard()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
-            weight = (float)(weight * 1.4);
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                weight = (float)(weight * 1.4);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                weight = Mathf.Max((float)(weight / 1.4), 0.1f);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+    }
+
+    void computePositionAccordingKeyboard()
+    {
+        position = new Vector4(0, 0, 0, 0);
+
+        if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
         {
-            weight = Mathf.Max((float)(weight / 1.4), 0.1f);
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                position.x = 1;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                position.x = -1;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                position.y = -1;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                position.y = 1;
+            }
         }
     }
 }
 
 public class WSWorker : WebSocketBehavior
 {
+
     protected override void OnMessage(MessageEventArgs e)
     {
         var msg = e.Data;
@@ -102,17 +154,19 @@ public class WSWorker : WebSocketBehavior
         { // GYRO
             if (header == "GY-X")
             {
-                Debug.Log("Got X axis (" + value + ")");
+                WebsocketServer.position.x = value;
             }
             else if (header == "GY-Y")
             {
-                Debug.Log("Got Y axis (" + value + ")");
-
+                WebsocketServer.position.y = value;
+            }
+            else if (header == "GY-Z")
+            {
+                WebsocketServer.position.z = value;
             }
             else if (header == "GY-H")
             {
-                Debug.Log("Got H axis (" + value + ")");
-
+                WebsocketServer.position.w = value;
             }
         }
         else if (header.StartsWith(""))
