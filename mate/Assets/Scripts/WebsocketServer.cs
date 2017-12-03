@@ -9,7 +9,8 @@ using UnityEngine.UI;
 public class WebsocketServer : MonoBehaviour
 {
 
-    public GameObject pingu;
+    public const float TranslationDamper = 1;
+    public const float RotationDamper = 1;
 
     public GameObject x_val;
     public GameObject y_val;
@@ -18,6 +19,8 @@ public class WebsocketServer : MonoBehaviour
 
     public const float lowerbound = 4.8f;
     public const float upperbound = 5.2f;
+
+    public GameObject pingu;
 
     private WebSocketServer wssv;
 
@@ -57,18 +60,14 @@ public class WebsocketServer : MonoBehaviour
         wssv.Stop();
     }
 
-    bool has(float v) {
-        return v <= -1 || v >= 1;
-    }
-
     void move()
     {
-        if (has(position.x))
+        if (Mathf.Abs(position.x) >= TranslationDamper)
         {
             var sens = position.x > 0 ? Vector3.forward : Vector3.back;
             pingu.transform.Translate(sens * Time.deltaTime);
         }
-        if (has(position.y))
+        if (Mathf.Abs(position.y) >= RotationDamper)
         {
             pingu.transform.Rotate(0, Time.deltaTime * 40 * position.y / Mathf.Abs(position.y), 0);
         }
@@ -130,25 +129,24 @@ public class WebsocketServer : MonoBehaviour
 
     void computePositionAccordingKeyboard()
     {
-        position = new Vector4(0, 0, 0, 0);
-
+        Debug.Log("computePositionAccordingKeyboard");
         if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
         {
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                position.x = 1;
+                position = new Vector4(TranslationDamper, 0, 0, 0);     // FORWARD
             }
             else if (Input.GetKey(KeyCode.DownArrow))
             {
-                position.x = -1;
+                position = new Vector4(-TranslationDamper, 0, 0, 0);    // BACKWARD
             }
             else if (Input.GetKey(KeyCode.LeftArrow))
             {
-                position.y = -1;
+                position = new Vector4(0, -RotationDamper, 0, 0);       // LEFT
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                position.y = 1;
+                position = new Vector4(0, RotationDamper, 0, 0);        // RIGHT
             }
         }
     }
