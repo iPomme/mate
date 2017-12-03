@@ -38,3 +38,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/UnityARKitPlugin/Examples/FaceTracking/FaceDirectionalLightEstimate.unity
     guid: 360fd35caee4f4e069485021a27c0b06
+  - enabled: 1
+    path: Assets/iRobot-Maze.unity
+    guid: 3e594244da3f343a1b324d9313741f3a
