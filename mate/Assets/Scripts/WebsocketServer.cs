@@ -53,6 +53,14 @@ public class WebsocketServer : MonoBehaviour
         grow();
 
         updateHUD();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            explosion = 1;     // FORWARD
+        }
+        if (explosion > 0.5f){
+            explosion = 0;
+            pingu.GetComponent<Animation>().Play();
+        }
     }
 
     void OnDestroy()
