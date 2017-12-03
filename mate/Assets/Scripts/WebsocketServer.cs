@@ -16,6 +16,8 @@ public class WebsocketServer : MonoBehaviour
     public GameObject y_val;
     public GameObject b_val;
     public GameObject weight_val;
+    public GameObject particle;
+    public GameObject fire;
 
     public const float lowerbound = 4.8f;
     public const float upperbound = 5.2f;
@@ -59,7 +61,10 @@ public class WebsocketServer : MonoBehaviour
         }
         if (explosion > 0.5f){
             explosion = 0;
-            pingu.GetComponent<Animation>().Play();
+            pingu.GetComponent<Animator>().enabled = true;
+            pingu.GetComponent<AudioSource>().enabled = true;
+            particle.SetActive(true);
+            fire.SetActive(true);
         }
     }
 
