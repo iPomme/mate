@@ -4,11 +4,17 @@ using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using System.Globalization;
+using UnityEngine.UI;
 
 public class WebsocketServer : MonoBehaviour
 {
 
     public GameObject pingu;
+
+    public GameObject x_val;
+    public GameObject y_val;
+    public GameObject b_val;
+    public GameObject weight_val;
 
     public const float lowerbound = 4.8f;
     public const float upperbound = 5.2f;
@@ -18,6 +24,8 @@ public class WebsocketServer : MonoBehaviour
     public static float weight = 0.1f;
 
     public static Vector4 position = new Vector4(0, 0, 0, 0);
+
+    public static float explosion = 0;
 
     private float moveCoeff = 5;
 
@@ -35,11 +43,13 @@ public class WebsocketServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        computePositionAccordingKeyboard();
+        //computePositionAccordingKeyboard();
         move();
 
         computeWeightAccordingKeyboard();
         grow();
+
+        updateHUD();
     }
 
     void OnDestroy()
@@ -60,7 +70,7 @@ public class WebsocketServer : MonoBehaviour
         }
         if (has(position.y))
         {
-            pingu.transform.Rotate(0, Time.deltaTime * 40 * position.y, 0);
+            pingu.transform.Rotate(0, Time.deltaTime * 40 * position.y / Mathf.Abs(position.y), 0);
         }
     }
 
@@ -94,6 +104,13 @@ public class WebsocketServer : MonoBehaviour
             pingu.transform.localScale = new Vector3(weight, weight, weight);
             pingu.GetComponent<Renderer>().material.color = Color.green;
         }
+    }
+
+    void updateHUD(){
+        x_val.GetComponent<Text>().text = "X: " + position.x.ToString();
+        y_val.GetComponent<Text>().text = "Y: " + position.y.ToString();
+        b_val.GetComponent<Text>().text = "B: " + explosion;
+        weight_val.GetComponent<Text>().text = "W: " + weight.ToString();
     }
 
     void computeWeightAccordingKeyboard()
@@ -161,7 +178,7 @@ public class WSWorker : WebSocketBehavior
             }
             else if (header == "GY-Y")
             {
-                WebsocketServer.position.y = value / Mathf.Abs(value);
+                WebsocketServer.position.y = value;
             }
             else if (header == "GY-Z")
             {
@@ -174,9 +191,12 @@ public class WSWorker : WebSocketBehavior
             }
 			
         }
-        else if (header.StartsWith(""))
-        { // GYRO
-
+        else if (header.StartsWith("BA"))
+        { // BAROMETER
+            if (header == "BA-EXPLOSION")
+            {
+                WebsocketServer.explosion = value;
+            }
         }
 
 
