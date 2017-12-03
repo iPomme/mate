@@ -26,7 +26,7 @@ vr-hackathlon projet
 
 ### 3D Printing
 
-- [Yuuta JORAND]()
+- [Yuuta JORAND](https://github.com/hydrogene09)
 
 
 ### Development
