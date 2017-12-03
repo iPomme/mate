@@ -38,7 +38,7 @@ public class WebsocketServer : MonoBehaviour
         computePositionAccordingKeyboard();
         move();
 
-        computeWeigthAccordingKeyboard();
+        computeWeightAccordingKeyboard();
         grow();
     }
 
@@ -56,7 +56,7 @@ public class WebsocketServer : MonoBehaviour
         if (has(position.x))
         {
             var sens = position.x > 0 ? Vector3.forward : Vector3.back;
-            pingu.transform.Translate(sens * Time.deltaTime * 10);
+            pingu.transform.Translate(sens * Time.deltaTime);
         }
         if (has(position.y))
         {
@@ -66,6 +66,7 @@ public class WebsocketServer : MonoBehaviour
 
     void grow()
     {
+        return;
         var width = pingu.GetComponent<Renderer>().bounds.size.x;
         if (weight > 10)
         {
@@ -95,7 +96,7 @@ public class WebsocketServer : MonoBehaviour
         }
     }
 
-    void computeWeigthAccordingKeyboard()
+    void computeWeightAccordingKeyboard()
     {
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
@@ -145,7 +146,7 @@ public class WSWorker : WebSocketBehavior
 
         string[] splitted = msg.Split(':');
         string header = splitted[0];
-        float value = Mathf.Abs(float.Parse(splitted[1], CultureInfo.InvariantCulture.NumberFormat));
+        float value = float.Parse(splitted[1], CultureInfo.InvariantCulture.NumberFormat);
         if (header == "S")
         { // SCALE
             WebsocketServer.weight = Mathf.Max(value, 0.1f);
@@ -154,11 +155,13 @@ public class WSWorker : WebSocketBehavior
         { // GYRO
             if (header == "GY-X")
             {
+                //value -= 100;
                 WebsocketServer.position.x = value;
+                Debug.Log("Got " + header + " (" + value + ")");
             }
             else if (header == "GY-Y")
             {
-                WebsocketServer.position.y = value;
+                WebsocketServer.position.y = value / Mathf.Abs(value);
             }
             else if (header == "GY-Z")
             {
@@ -167,7 +170,9 @@ public class WSWorker : WebSocketBehavior
             else if (header == "GY-H")
             {
                 WebsocketServer.position.w = value;
+				//Debug.Log("Got " + header + " (" + value + ")");
             }
+			
         }
         else if (header.StartsWith(""))
         { // GYRO
@@ -175,7 +180,7 @@ public class WSWorker : WebSocketBehavior
         }
 
 
-        Debug.Log("WW: " + WebsocketServer.weight);
+        //Debug.Log("WW: " + WebsocketServer.weight);
     }
 
 
