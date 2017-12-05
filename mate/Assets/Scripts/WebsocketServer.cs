@@ -51,8 +51,8 @@ public class WebsocketServer : MonoBehaviour
         //computePositionAccordingKeyboard();
         move();
 
-        computeWeightAccordingKeyboard();
-        grow();
+        //computeWeightAccordingKeyboard();
+        //grow();
 
         updateHUD();
         if (Input.GetKeyDown(KeyCode.Space))
@@ -88,7 +88,6 @@ public class WebsocketServer : MonoBehaviour
 
     void grow()
     {
-        return;
         var width = pingu.GetComponent<Renderer>().bounds.size.x;
         if (weight > 10)
         {

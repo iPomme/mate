@@ -155,7 +155,7 @@ PlayerSettings:
     Android: com.Company.ProductName
     Standalone: unity.Unity Technologies.Native Rendering Plugin Example
     Tizen: com.Company.ProductName
-    iOS: com.unity.arkitscene
+    iOS: io.mate.maze
     tvOS: com.Company.ProductName
   buildNumber:
     iOS: 0
@@ -226,7 +226,7 @@ PlayerSettings:
   metalEditorSupport: 0
   metalAPIValidation: 0
   iOSRenderExtraFrameOnPause: 1
-  appleDeveloperTeamID: 
+  appleDeveloperTeamID: XH2T8F69AR
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   appleEnableAutomaticSigning: 1
