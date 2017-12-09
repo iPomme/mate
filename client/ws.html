@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+    <script type="text/javascript">
+
+        document.onkeyup = keyUp;
+        document.onkeydown = keyDown;
+        var ws;
+        var canvas;
+        var context;
+
+        function init() {
+            canvas = document.getElementById("serverStatus");
+            context = canvas.getContext("2d");
+            context.arc(10, 10, 10, 0, Math.PI * 2, false);
+            context.fillStyle = "red";
+            context.fill();
+
+        }
+
+        function keyUp(e) {
+
+            e = e || window.event;
+
+            if (e.keyCode == '38') {
+                // up arrow
+                ws.send('GY-X:0');
+            }
+            else if (e.keyCode == '40') {
+                // down arrow
+                console.log('Going down');
+                ws.send('GY-X:-0');
+            }
+            else if (e.keyCode == '37') {
+                // left arrow
+                console.log('Going Left');
+                ws.send('GY-Y:0');
+            }
+            else if (e.keyCode == '39') {
+                // right arrow
+                console.log('Going Right');
+                ws.send('GY-Y:-0');
+            }
+            else if (e.keyCode == '32') {
+                // right arrow
+                console.log('Boom');
+                ws.send('BA-EXPLOSION:0');
+            }
+
+        }
+
+        function keyDown(e) {
+
+            e = e || window.event;
+
+            if (e.keyCode == '38') {
+                // up arrow
+                console.log('Going up');
+                ws.send('GY-X:10');
+            }
+            else if (e.keyCode == '40') {
+                // down arrow
+                console.log('Going down');
+                ws.send('GY-X:-10');
+            }
+            else if (e.keyCode == '37') {
+                // left arrow
+                console.log('Going Left');
+                ws.send('GY-Y:-10');
+            }
+            else if (e.keyCode == '39') {
+                // right arrow
+                console.log('Going Right');
+                ws.send('GY-Y:10');
+            }
+            else if (e.keyCode == '32') {
+                // right arrow
+                console.log('Boom');
+                ws.send('BA-EXPLOSION:1');
+            }
+
+        }
+
+        function connect() {
+            if ("WebSocket" in window) {
+
+                // Let us open a web socket
+                let h = document.getElementById("host_txt").value;
+                let p = document.getElementById("port_txt").value;
+                let serverURL = `ws://${h}:${p}/`;
+                console.log(serverURL);
+                ws = new WebSocket(serverURL);
+
+                ws.onopen = function () {
+                    // Web Socket is connected, send data using send()
+                    context.fillStyle = "green";
+                    context.fill();
+                };
+
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    alert("Message is received...");
+                };
+
+                ws.onclose = function () {
+                    // websocket is closed.
+                    context.fillStyle = "red";
+                    context.fill();
+                };
+
+                window.onbeforeunload = function (event) {
+                    socket.close();
+                };
+            }
+
+            else {
+                // The browser doesn't support WebSocket
+                alert("WebSocket NOT supported by your Browser!");
+            }
+        }
+
+        function send(msg) {
+            ws.send(msg);
+            console.log(`message '${msg}' sent.`)
+        }
+    </script>
+
+</head>
+<body onload="init();">
+
+<div id="sse">
+    <table>
+        <tr>
+            <td><label>Host:</label></td>
+            <td><input id="host_txt" type="text" placeholder="127.0.0.1" value="192.168.8.100"/></td>
+        </tr>
+        <tr>
+            <td><label>Port:</label></td>
+            <td><input id="port_txt" type="text" placeholder="8086" value="8086"/></td>
+        </tr>
+        <tr>
+            <td><a href="javascript:connect()">connect to the server</a></td>
+            <td style="text-align: center;">
+                <canvas id="serverStatus" width="20" height="20"></canvas>
+            </td>
+        </tr>
+    </table>
+
+    <div>
+        <br/>
+        <br/>
+        <br/>
+        Use the Arrow key to move the robot.<br/>
+        Space to explose it.
+    </div>
+
+</div>
+
+</body>
+</html>
+

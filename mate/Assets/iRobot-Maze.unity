@@ -392,14 +392,14 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: 0.0015354156
-        value: 1
+        time: 0.06144333
+        value: 0.027780533
         inSlope: 0
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.96243465
-        value: 1
+        time: 0.9739703
+        value: 0.20138931
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -593,7 +593,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 325879644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -470.7, y: -188.83, z: 0}
+  m_LocalPosition: {x: -476.2, y: -412.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 634974699}
@@ -762,7 +762,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 544159711}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 482.5, y: 204.5, z: 0}
+  m_LocalPosition: {x: 488, y: 428.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 325879645}
@@ -1138,7 +1138,7 @@ GameObject:
   - component: {fileID: 1024272566}
   m_Layer: 0
   m_Name: endPos
-  m_TagString: Untagged
+  m_TagString: laserPos
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

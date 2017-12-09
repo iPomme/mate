@@ -42,7 +42,7 @@ public class WebsocketServer : MonoBehaviour
         wssv = new WebSocketServer("ws://0.0.0.0:8086");
         wssv.AddWebSocketService<WSWorker>("/");
         wssv.Start();
-        Debug.Log("WebSocket started !");
+        Debug.Log("WebSocket started on the root !");
     }
 
     // Update is called once per frame
@@ -61,6 +61,9 @@ public class WebsocketServer : MonoBehaviour
         }
         if (explosion > 0.5f){
             explosion = 0;
+            GameObject endLaser = GameObject.FindWithTag("laserPos");
+            endLaser.transform.position = new Vector3(0, 0, 0);
+            pingu.GetComponentInChildren<LineRenderer>().SetPosition(1, new Vector3(0,0,0));
             pingu.GetComponent<Animator>().enabled = true;
             pingu.GetComponent<AudioSource>().enabled = true;
             particle.SetActive(true);
@@ -169,8 +172,9 @@ public class WSWorker : WebSocketBehavior
 
     protected override void OnMessage(MessageEventArgs e)
     {
+        Debug.Log("Received message ...");
         var msg = e.Data;
-
+        Debug.Log("received: " + msg);
         string[] splitted = msg.Split(':');
         string header = splitted[0];
         float value = float.Parse(splitted[1], CultureInfo.InvariantCulture.NumberFormat);
@@ -211,6 +215,19 @@ public class WSWorker : WebSocketBehavior
 
 
         //Debug.Log("WW: " + WebsocketServer.weight);
+    }
+
+
+    protected override  void OnClose(CloseEventArgs e){
+        Debug.Log("OnClose: " + e.Reason);
+    }
+
+    protected override  void OnError(ErrorEventArgs e){
+        Debug.Log("OnError: " + e.Message);
+    }
+
+    protected override  void OnOpen(){
+        Debug.Log("OnOpen");
     }
 
 
