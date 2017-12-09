@@ -63,7 +63,6 @@ public class WebsocketServer : MonoBehaviour
             explosion = 0;
             GameObject endLaser = GameObject.FindWithTag("laserPos");
             endLaser.transform.position = new Vector3(0, 0, 0);
-            pingu.GetComponentInChildren<LineRenderer>().SetPosition(1, new Vector3(0,0,0));
             pingu.GetComponent<Animator>().enabled = true;
             pingu.GetComponent<AudioSource>().enabled = true;
             particle.SetActive(true);

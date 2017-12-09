@@ -10,6 +10,13 @@ vr-hackathlon projet
 
 ![Mate & Mate](resources/IMG_3222.JPG)
 
+## Simulation de capteur / actuateur
+
+Lancer l'appication sur l'iPad, noter l'IP puis ouvrir dans un browser le fichier `client/ws.html`.
+
+Renseigné l'IP de l'iPad puis le port, clicker sur connecté, le point rouge devrait passer au vert si la connection est réussie.
+
+Une fois connecté, utilier les fleches haut/bas/gauche/droite pour faire bouger le robot et espace pour le faire exploser.
 
 ## Credits
 
